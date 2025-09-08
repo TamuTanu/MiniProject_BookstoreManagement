@@ -1,0 +1,7 @@
+.grid-bg{
+	background-color: #ced46a;
+}
+
+.grid-bg > * {
+    background-color: transparent;
+}
