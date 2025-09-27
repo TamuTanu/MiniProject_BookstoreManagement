@@ -16,3 +16,16 @@ void cssAddLoadCSS(GtkCssProvider *provider,char *path,GtkWidget *widget,char *c
 	gtk_widget_add_css_class(widget,class);
 	gtk_css_provider_load_from_path(provider,path);
 }
+
+void showPopupAddWindow(GtkWidget *button,gpointer user_data){
+	g_print("1");
+}
+
+void showPopupRemoveWindow(GtkWidget *button,gpointer user_data){
+	g_print("2");
+}
+
+
+void showPopupEditWindow(GtkWidget *button,gpointer user_data){
+	g_print("3");
+}

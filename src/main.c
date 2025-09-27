@@ -8,7 +8,7 @@ static GtkWidget *subGrid;
 static GtkWidget *mainCenterBox;
 static GtkWidget *subCenterBox;
 static GtkWidget *selectDropdown;
-static GtkWidget *verticalPaned;
+//static GtkWidget *verticalPaned;
 
 static GtkWidget *addButton;
 static GtkWidget *removeButton;
@@ -19,6 +19,11 @@ static GtkWidget *windowControls;
 
 static void activate(GtkApplication *app,gpointer user_data){
 	
+	window = gtk_application_window_new (app);
+  	gtk_window_set_title (GTK_WINDOW (window), "BookstoreManagement");
+  	gtk_widget_set_size_request (window,800,800);
+	gtk_window_set_resizable(GTK_WINDOW(window), FALSE); 
+
 	initCSS();	
 	windowControls = gtk_window_controls_new(GTK_PACK_END);
 
@@ -51,29 +56,27 @@ static void activate(GtkApplication *app,gpointer user_data){
 	gtk_widget_set_size_request(addButton, 266, 30);
 	cssAddLoadCSS(provider,"css/header.css",addButton,"optionsButton");
 	gtk_widget_set_hexpand(addButton, TRUE);
+	g_signal_connect(addButton,"clicked",G_CALLBACK(showPopupAddWindow),window);
 
 	removeButton = gtk_button_new_with_label("Remove");
 	gtk_widget_set_size_request(removeButton, 266, 30);
 	cssAddLoadCSS(provider,"css/header.css",removeButton,"optionsButton");
 	gtk_widget_set_hexpand(removeButton, TRUE);
+	g_signal_connect(removeButton,"clicked",G_CALLBACK(showPopupRemoveWindow),NULL);
 	
 	editButton = gtk_button_new_with_label("Edit");
 	gtk_widget_set_size_request(editButton, 266, 30);
 	cssAddLoadCSS(provider,"css/header.css",editButton,"optionsButton");
 	gtk_widget_set_hexpand(editButton, TRUE);
+	g_signal_connect(editButton,"clicked",G_CALLBACK(showPopupEditWindow),NULL);
 
 	gtk_grid_attach(GTK_GRID(mainGrid),mainCenterBox,0,0,1,1);
-	window = gtk_application_window_new (app);
-  	gtk_window_set_title (GTK_WINDOW (window), "BookstoreManagement");
-  	gtk_widget_set_size_request (window,800,600);
-	gtk_window_set_resizable(GTK_WINDOW(window), FALSE); 
-
 	gtk_center_box_set_start_widget(GTK_CENTER_BOX(mainCenterBox),headerLabel);
 	gtk_center_box_set_start_widget(GTK_CENTER_BOX(subCenterBox),addButton);
 	gtk_center_box_set_center_widget(GTK_CENTER_BOX(subCenterBox),removeButton);
 	gtk_center_box_set_end_widget(GTK_CENTER_BOX(subCenterBox),editButton);
 
-	gtk_grid_attach(GTK_GRID(subGrid),verticalPaned,0,0,3,1);
+	//gtk_grid_attach(GTK_GRID(subGrid),verticalPaned,0,0,3,1);
 	gtk_grid_attach(GTK_GRID(mainGrid),mainCenterBox,0,0,1,1);
 	gtk_grid_attach(GTK_GRID(mainGrid),searchBar,0,1,1,1);
 	gtk_grid_attach(GTK_GRID(mainGrid),subCenterBox,0,2,1,1);
@@ -84,7 +87,7 @@ static void activate(GtkApplication *app,gpointer user_data){
 }
 
 int main(int argc,char **argv){
-	 GtkApplication *app;
+	GtkApplication *app;
 	 int status;
  
 	app = gtk_application_new ("net.tamutanu.bookstoremanagement", G_APPLICATION_DEFAULT_FLAGS);
