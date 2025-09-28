@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = `pkg-config --cflags gtk4` -Iheaders -Wall -g -MMD -MP
-LDFLAGS = `pkg-config --libs gtk4`
+CFLAGS = `pkg-config --cflags gtk4` -Iheaders -Wall -g -MMD -MP -fsanitize=address
+LDFLAGS = `pkg-config --libs gtk4` -fsanitize=address
 
 SRC = $(wildcard src/*.c)
 OBJ = $(SRC:.c=.o)

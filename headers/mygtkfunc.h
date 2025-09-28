@@ -5,6 +5,13 @@
 
 extern GtkCssProvider *provider;
 
+struct data{
+	GtkApplication *app;
+	GtkWidget *window;
+};
+
+extern struct data gData;
+
 void initCSS();
 
 void cssAddLoadCSS(GtkCssProvider *provider,char *path,GtkWidget *widget,char *class);

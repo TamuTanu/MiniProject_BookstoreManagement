@@ -1,6 +1,7 @@
-src/main.o: src/main.c /usr/include/gtk-4.0/gtk/gtk.h \
- /usr/include/gtk-4.0/gtk/css/gtkcss.h /usr/include/glib-2.0/glib.h \
- /usr/include/glib-2.0/glib/galloca.h /usr/include/glib-2.0/glib/gtypes.h \
+src/popupmanager.o: src/popupmanager.c src/../headers/popupmanager.h \
+ /usr/include/gtk-4.0/gtk/gtk.h /usr/include/gtk-4.0/gtk/css/gtkcss.h \
+ /usr/include/glib-2.0/glib.h /usr/include/glib-2.0/glib/galloca.h \
+ /usr/include/glib-2.0/glib/gtypes.h \
  /usr/lib64/glib-2.0/include/glibconfig.h \
  /usr/include/glib-2.0/glib/gmacros.h \
  /usr/include/glib-2.0/glib/gversionmacros.h \
@@ -673,8 +674,8 @@ src/main.o: src/main.c /usr/include/gtk-4.0/gtk/gtk.h \
  /usr/include/gtk-4.0/gtk/gtkwidgetpaintable.h \
  /usr/include/gtk-4.0/gtk/gtkwindowcontrols.h \
  /usr/include/gtk-4.0/gtk/gtkwindowgroup.h \
- /usr/include/gtk-4.0/gtk/gtkwindowhandle.h \
- headers/../headers/mygtkfunc.h headers/../headers/popupmanager.h
+ /usr/include/gtk-4.0/gtk/gtkwindowhandle.h
+src/../headers/popupmanager.h:
 /usr/include/gtk-4.0/gtk/gtk.h:
 /usr/include/gtk-4.0/gtk/css/gtkcss.h:
 /usr/include/glib-2.0/glib.h:
@@ -1392,5 +1393,3 @@ src/main.o: src/main.c /usr/include/gtk-4.0/gtk/gtk.h \
 /usr/include/gtk-4.0/gtk/gtkwindowcontrols.h:
 /usr/include/gtk-4.0/gtk/gtkwindowgroup.h:
 /usr/include/gtk-4.0/gtk/gtkwindowhandle.h:
-headers/../headers/mygtkfunc.h:
-headers/../headers/popupmanager.h:
