@@ -674,7 +674,7 @@ src/popupmanager.o: src/popupmanager.c src/../headers/popupmanager.h \
  /usr/include/gtk-4.0/gtk/gtkwidgetpaintable.h \
  /usr/include/gtk-4.0/gtk/gtkwindowcontrols.h \
  /usr/include/gtk-4.0/gtk/gtkwindowgroup.h \
- /usr/include/gtk-4.0/gtk/gtkwindowhandle.h
+ /usr/include/gtk-4.0/gtk/gtkwindowhandle.h src/../headers/mygtkfunc.h
 src/../headers/popupmanager.h:
 /usr/include/gtk-4.0/gtk/gtk.h:
 /usr/include/gtk-4.0/gtk/css/gtkcss.h:
@@ -1393,3 +1393,4 @@ src/../headers/popupmanager.h:
 /usr/include/gtk-4.0/gtk/gtkwindowcontrols.h:
 /usr/include/gtk-4.0/gtk/gtkwindowgroup.h:
 /usr/include/gtk-4.0/gtk/gtkwindowhandle.h:
+src/../headers/mygtkfunc.h:
