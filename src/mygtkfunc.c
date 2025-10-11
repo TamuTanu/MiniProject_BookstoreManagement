@@ -21,17 +21,7 @@ void cssAddLoadCSS(GtkCssProvider *provider,char *path,GtkWidget *widget,char *c
 
 void showPopupAddWindow(GtkWidget *button,gpointer user_data){
 	
-	struct data *gData = (struct data*) user_data;
-
-	GtkWidget *popup = GTK_WIDGET(gData -> window);
-	gtk_window_set_title(GTK_WINDOW(popup),"AddBook Window");
-	gtk_widget_set_size_request(popup, 600,400);
-	gtk_window_set_resizable(GTK_WINDOW(popup),FALSE);
-	gtk_window_set_application(GTK_WINDOW(popup),gData -> app);	
-		
-	setWindow();
-
-	gtk_window_present(GTK_WINDOW(popup));
+  showPopupWindow();
 	
 }
 

@@ -3,7 +3,6 @@
 #include <../headers/popupmanager.h>
 
 static GtkWidget *window = NULL;
-static GtkWidget *popupWindow = NULL;
 static GtkWidget *headerLabel;
 static GtkWidget *mainGrid;
 static GtkWidget *subGrid;
@@ -21,13 +20,13 @@ static GtkWidget *windowControls;
 static void activate(GtkApplication *app,gpointer user_data){
 
 	initCSS();	
-	initPopupWidget();
 	
 	window = gtk_application_window_new (app);
   	gtk_window_set_title (GTK_WINDOW (window), "BookstoreManagement");
   	gtk_widget_set_size_request (window,800,800);
 	gtk_window_set_resizable(GTK_WINDOW(window), FALSE); 
 
+  initPopupWindow(GTK_WINDOW(window),app);
 	windowControls = gtk_window_controls_new(GTK_PACK_END);
 
 	//Widget
@@ -48,19 +47,13 @@ static void activate(GtkApplication *app,gpointer user_data){
 	selectDropdown = gtk_drop_down_new(NULL,NULL);
 	
 	searchBar = gtk_search_entry_new();
-	
-	//popup
-	popupWindow = gtk_window_new();
-	gData.app = app;
-	gData.window = popupWindow;
-	popupwindow = getwindow(popupWindow);
 
 	//Button
 	addButton = gtk_button_new_with_label("Add");
 	gtk_widget_set_size_request(addButton, 266, 30);
 	cssAddLoadCSS(provider,"css/header.css",addButton,"optionsButton");
 	gtk_widget_set_hexpand(addButton, TRUE);
-	g_signal_connect(addButton,"clicked",G_CALLBACK(showPopupAddWindow),&gData);
+	g_signal_connect(addButton,"clicked",G_CALLBACK(showPopupAddWindow),NULL);
 
 	removeButton = gtk_button_new_with_label("Remove");
 	gtk_widget_set_size_request(removeButton, 266, 30);

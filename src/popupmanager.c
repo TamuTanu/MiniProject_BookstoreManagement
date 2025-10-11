@@ -1,8 +1,9 @@
 #include "../headers/popupmanager.h"
 #include "../headers/mygtkfunc.h"
+#include "../headers/datacontroller.h"
 
 //GtkWidget Declared zone
-GtkWidget *popupwindow;
+GtkWidget *popupwindow = NULL;
 GtkWidget *bookNamebar;
 GtkWidget *bookAuthorbar;
 GtkWidget *bookPricebar;
@@ -16,11 +17,6 @@ GtkFileDialog *fileDialog;
 GtkWidget *paned;
 GtkWidget *grid;
 GtkWidget *box;
-
-GtkWidget* getwindow(GtkWidget *window){
-	return window;
-}
-
 
 void onFileDialogOpen(GtkFileDialog* self,GAsyncResult *res,gpointer user_data){
 
@@ -74,10 +70,12 @@ void initPopupWidget(){
 	doneButton = gtk_button_new_with_label("DONE");
 	gtk_widget_set_size_request(doneButton,120,60);
   gtk_widget_set_margin_top(doneButton, 15);
+  g_signal_connect(doneButton,"clicked",G_CALLBACK(onDoneClicked),bookNamebar); 
 
 	cancerButton = gtk_button_new_with_label("CANCEL");
 	gtk_widget_set_size_request(cancerButton,120,60);
   gtk_widget_set_margin_top(cancerButton, 15);
+  g_signal_connect(cancerButton,"clicked",G_CALLBACK(onCancelClicked),popupwindow); 
 
 	bookCoverImage = gtk_image_new_from_file("images/placeholder.png");
 	gtk_widget_set_size_request(bookCoverImage,230,310);
@@ -99,6 +97,7 @@ void initPopupWidget(){
 
 	paned = gtk_paned_new(0);
 	gtk_paned_set_position(GTK_PANED(paned),270);
+  cssAddLoadCSS(provider,"css/inputbar.css",paned,"panedframe");
 	grid = gtk_grid_new();
 	box = gtk_box_new(0,10);
 
@@ -130,4 +129,42 @@ void setWindow(){
 	gtk_paned_set_start_child(GTK_PANED(paned),bookCoverImage);
 	gtk_paned_set_end_child(GTK_PANED(paned),grid);
 
+}
+
+void showPopupWindow(){
+  
+  if(popupwindow != NULL){
+
+    gtk_widget_set_visible(popupwindow,TRUE);
+
+  }else{
+    g_print("PopupWindow is NULL.");
+  }
+
+}
+
+void initPopupWindow(GtkWindow *mainWindow,GtkApplication *app){
+  if(popupwindow == NULL){
+      popupwindow = gtk_window_new();
+      gtk_window_set_title(GTK_WINDOW(popupwindow),"POPUP WINDOW");
+      gtk_widget_set_size_request(popupwindow,600,400);
+      gtk_window_set_resizable(GTK_WINDOW(popupwindow),FALSE);
+      gtk_window_set_application(GTK_WINDOW(popupwindow),app);
+      
+      gtk_window_set_decorated(GTK_WINDOW(popupwindow),FALSE);
+      gtk_window_set_transient_for(GTK_WINDOW(popupwindow),mainWindow);
+      gtk_window_set_modal(GTK_WINDOW(popupwindow),TRUE);
+
+      //g_signal_connect(popupwindow,"close-request",G_CALLBACK(onPopupClose),NULL); 
+      g_object_ref_sink(popupwindow);
+
+      initPopupWidget();
+      setWindow();
+      gtk_widget_set_visible(popupwindow,FALSE);
+
+      g_print("init successfuly.");
+
+  }else{
+    g_print("popupWindow already used.");
+  }
 }

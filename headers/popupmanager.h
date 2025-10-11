@@ -3,12 +3,7 @@
 
 #include <gtk/gtk.h>
 
-extern GtkWidget *popupwindow;
-
-GtkWidget* getwindow(GtkWidget *window);
-
-void initPopupWidget();
-
-void setWindow();
+void showPopupWindow();
+void initPopupWindow(GtkWindow *mainWindow,GtkApplication *app);
 
 #endif
