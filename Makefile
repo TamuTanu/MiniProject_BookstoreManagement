@@ -15,7 +15,7 @@ WINCFLAGS = `$(WINPKG) --cflags gtk4` -Iheaders -Ithirdparty -Wall -g -MMD -MP
 WINLDFLAGS = `$(WINPKG) --libs gtk4`
 
 WINOBJ = $(SRC:.c=.win.o)
-WINTARGET = gtkapp.exe
+WINTARGET = winbuild/gtkapp.exe
 
 all: $(TARGET)
 
@@ -30,9 +30,13 @@ $(TARGET): $(OBJ)
 %.win.o: %.c
 	$(WINCC) $(WINCFLAGS) -c $< -o $@
 
+# -----------------------------
+# Windows build section
+# -----------------------------
 win: $(WINTARGET)
 
 $(WINTARGET): $(WINOBJ)
+	mkdir -p $(dir $@)
 	$(WINCC) -o $@ $^ $(WINLDFLAGS)
 
 run: $(TARGET)
@@ -41,5 +45,5 @@ run: $(TARGET)
 clean:
 	rm -f src/*.o src/*.d thirdparty/*.o thirdparty/*.d \
 	      src/*.win.o thirdparty/*.win.o \
-	      $(TARGET) $(WINTARGET)
+	      $(TARGET) winbuild/*.exe
 

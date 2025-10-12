@@ -8,7 +8,7 @@ GtkWidget *bookNamebar;
 GtkWidget *bookAuthorbar;
 GtkWidget *bookPricebar;
 GtkWidget *doneButton;
-GtkWidget *cancerButton;
+GtkWidget *cancelButton;
 GtkWidget *bookCoverImage;
 GtkWidget *bookCoverPathbar;
 GtkWidget *findPathButton;
@@ -67,19 +67,6 @@ void initPopupWidget(){
   gtk_widget_set_margin_end(bookPricebar,10);
   cssAddLoadCSS(provider,"css/inputbar.css",bookPricebar,"inputbar");
 
-	doneButton = gtk_button_new_with_label("DONE");
-	gtk_widget_set_size_request(doneButton,120,60);
-  gtk_widget_set_margin_top(doneButton, 15);
-  g_signal_connect(doneButton,"clicked",G_CALLBACK(onDoneClicked),bookNamebar); 
-
-	cancerButton = gtk_button_new_with_label("CANCEL");
-	gtk_widget_set_size_request(cancerButton,120,60);
-  gtk_widget_set_margin_top(cancerButton, 15);
-  g_signal_connect(cancerButton,"clicked",G_CALLBACK(onCancelClicked),popupwindow); 
-
-	bookCoverImage = gtk_image_new_from_file("images/placeholder.png");
-	gtk_widget_set_size_request(bookCoverImage,230,310);
-
 	bookCoverPathbar = gtk_entry_new();
   gtk_entry_set_placeholder_text(GTK_ENTRY(bookCoverPathbar),"Input Cover Path.");
 	gtk_widget_set_size_request(bookCoverPathbar,260,30);
@@ -87,6 +74,24 @@ void initPopupWidget(){
   gtk_widget_set_margin_top(bookCoverPathbar, 15);
   gtk_widget_set_margin_start(bookCoverPathbar,10);
   cssAddLoadCSS(provider,"css/inputbar.css",bookAuthorbar,"inputbar");
+
+  data.bookName = GTK_ENTRY(bookNamebar);
+  data.bookAuthor = GTK_ENTRY(bookAuthorbar);
+  data.bookPrice = GTK_ENTRY(bookPricebar);
+  data.bookCoverPath = GTK_ENTRY(bookCoverPathbar);
+
+	doneButton = gtk_button_new_with_label("DONE");
+	gtk_widget_set_size_request(doneButton,120,60);
+  gtk_widget_set_margin_top(doneButton, 15);
+  g_signal_connect(doneButton,"clicked",G_CALLBACK(onDoneClicked),NULL); 
+
+	cancelButton = gtk_button_new_with_label("CANCEL");
+	gtk_widget_set_size_request(cancelButton,120,60);
+  gtk_widget_set_margin_top(cancelButton, 15);
+  g_signal_connect(cancelButton,"clicked",G_CALLBACK(onCancelClicked),NULL); 
+
+	bookCoverImage = gtk_image_new_from_file("images/placeholder.png");
+	gtk_widget_set_size_request(bookCoverImage,230,310);
 
 	findPathButton = gtk_button_new();
   gtk_button_set_icon_name(GTK_BUTTON(findPathButton),"document-open");
@@ -118,7 +123,7 @@ void setWindow(){
 
 	gtk_box_append(GTK_BOX(box), doneButton);
 	gtk_widget_set_margin_start(doneButton, 40);	
-	gtk_box_append(GTK_BOX(box), cancerButton);
+	gtk_box_append(GTK_BOX(box), cancelButton);
 	gtk_grid_attach(GTK_GRID(grid), box, 0, 4, 2, 1);
 
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 10);
@@ -160,6 +165,7 @@ void initPopupWindow(GtkWindow *mainWindow,GtkApplication *app){
 
       initPopupWidget();
       setWindow();
+      initAlertWindow();
       gtk_widget_set_visible(popupwindow,FALSE);
 
       g_print("init successfuly.");
