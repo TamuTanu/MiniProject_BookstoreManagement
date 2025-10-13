@@ -12,7 +12,7 @@ TARGET = gtkapp
 WINCC = x86_64-w64-mingw32-gcc
 WINPKG = x86_64-w64-mingw32-pkg-config
 WINCFLAGS = `$(WINPKG) --cflags gtk4` -Iheaders -Ithirdparty -Wall -g -MMD -MP
-WINLDFLAGS = `$(WINPKG) --libs gtk4`
+WINLDFLAGS = `$(WINPKG) --libs gtk4` -mwindows
 
 WINOBJ = $(SRC:.c=.win.o)
 WINTARGET = winbuild/gtkapp.exe

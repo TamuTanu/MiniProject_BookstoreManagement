@@ -1,14 +1,3 @@
 .entrybar{
  font-size:20px; 
 }
-
-.panedframe{
-  border: 2px solid #4a90e2;
-  border-radius: 5;
-}
-
-.panedframe > separator {
-  background-color: #888;
-  min-width: 6px;   /* สำหรับ HPaned */
-  min-height: 6px;  /* สำหรับ VPaned */
-}

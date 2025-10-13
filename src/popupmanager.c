@@ -168,9 +168,9 @@ void initPopupWindow(GtkWindow *mainWindow,GtkApplication *app){
       initAlertWindow();
       gtk_widget_set_visible(popupwindow,FALSE);
 
-      g_print("init successfuly.");
+      g_print("\ninit successfuly.");
 
   }else{
-    g_print("popupWindow already used.");
+    g_print("\npopupWindow already used.");
   }
 }

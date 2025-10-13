@@ -1,11 +1,12 @@
 #include <gtk/gtk.h>
 #include <../headers/mygtkfunc.h>
 #include <../headers/popupmanager.h>
+#include <../headers/datacontroller.h>
+#include <../headers/displaybook.h>
 
 static GtkWidget *window = NULL;
 static GtkWidget *headerLabel;
 static GtkWidget *mainGrid;
-static GtkWidget *subGrid;
 static GtkWidget *mainCenterBox;
 static GtkWidget *subCenterBox;
 static GtkWidget *selectDropdown;
@@ -20,6 +21,8 @@ static GtkWidget *windowControls;
 static void activate(GtkApplication *app,gpointer user_data){
 
 	initCSS();	
+  loadBook();
+  initScrolling();
 	
 	window = gtk_application_window_new (app);
   	gtk_window_set_title (GTK_WINDOW (window), "BookstoreManagement");
@@ -39,7 +42,6 @@ static void activate(GtkApplication *app,gpointer user_data){
 	cssAddLoadCSS(provider,"css/header.css",subCenterBox,"subCenterBox");
 
 	mainGrid = gtk_grid_new();
-	subGrid = gtk_grid_new();
 
 	headerLabel = gtk_label_new("    BookstoreManagement");
 	cssAddLoadCSS(provider,"css/header.css",headerLabel,"header");
@@ -74,10 +76,10 @@ static void activate(GtkApplication *app,gpointer user_data){
 	gtk_center_box_set_end_widget(GTK_CENTER_BOX(subCenterBox),editButton);
 
 	//gtk_grid_attach(GTK_GRID(subGrid),verticalPaned,0,0,3,1);
+	gtk_grid_attach(GTK_GRID(mainGrid),scrollingWindow,0,3,1,1);
 	gtk_grid_attach(GTK_GRID(mainGrid),mainCenterBox,0,0,1,1);
 	gtk_grid_attach(GTK_GRID(mainGrid),searchBar,0,1,1,1);
 	gtk_grid_attach(GTK_GRID(mainGrid),subCenterBox,0,2,1,1);
-	gtk_grid_attach(GTK_GRID(mainGrid),subGrid,0,3,1,1);
 	gtk_window_set_child (GTK_WINDOW (window),mainGrid);
 
   	gtk_window_present (GTK_WINDOW (window));
