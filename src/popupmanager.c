@@ -91,7 +91,7 @@ void initPopupWidget(){
   g_signal_connect(cancelButton,"clicked",G_CALLBACK(onCancelClicked),NULL); 
 
 	bookCoverImage = gtk_image_new_from_file("images/placeholder.png");
-	gtk_widget_set_size_request(bookCoverImage,230,310);
+ 	gtk_widget_set_size_request(bookCoverImage,230,310);
 
 	findPathButton = gtk_button_new();
   gtk_button_set_icon_name(GTK_BUTTON(findPathButton),"document-open");
@@ -168,7 +168,7 @@ void initPopupWindow(GtkWindow *mainWindow,GtkApplication *app){
       initAlertWindow();
       gtk_widget_set_visible(popupwindow,FALSE);
 
-      g_print("\ninit successfuly.");
+      g_print("\ninit addbookPopup successfuly.");
 
   }else{
     g_print("\npopupWindow already used.");

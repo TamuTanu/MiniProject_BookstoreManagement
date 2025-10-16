@@ -17,7 +17,6 @@ GtkWidget *alPaned;
 
 void loadBook(){
   sqlite3 *db;
-  char *err = NULL;
   const char *sqlChecker = "SELECT name FROM sqlite_master WHERE type='table' AND name='books';";
   sqlite3_stmt *stmt;
 
@@ -49,6 +48,61 @@ void loadBook(){
 
   sqlite3_finalize(stmt);
   sqlite3_close(db);
+}
+
+void reloadBook(GtkBox *bookbox){
+  
+  sqlite3 *db;
+  sqlite3_stmt *stmt;
+  int rc;
+  
+  rc = sqlite3_open("books.db",&db);
+  if(rc != SQLITE_OK){
+    g_print("Failed to init database;");
+  //Book list example.
+    if(bookbox != NULL){
+      GtkWidget *child;
+      while ((child = gtk_widget_get_first_child(GTK_WIDGET(bookbox))) != NULL) {
+          gtk_box_remove(bookbox, child);
+      }
+    }
+    for (int i = 0; i < 50; i++) {
+        char label[8];
+        snprintf(label, sizeof(label), "NULL%d", i + 1);
+        GtkWidget *btn = gtk_button_new_with_label(label);
+        gtk_box_append(bookbox, btn);
+    }
+  }else{
+    g_print("\nDatabase sucessfuly reload.");
+  }
+
+  const char *sql = "SELECT id,title FROM books;";
+  rc = sqlite3_prepare_v2(db,sql,-1,&stmt,0);
+  if(rc != SQLITE_OK){
+    g_print("\nPromblem while preparing database commands.");
+    sqlite3_close(db);
+  }
+  
+  if(bookbox != NULL){
+    GtkWidget *child;
+    while((child = gtk_widget_get_first_child(GTK_WIDGET(bookbox))) != NULL){
+        gtk_box_remove(bookbox,child);
+    }
+  }
+  while((rc = sqlite3_step(stmt)) == SQLITE_ROW){
+    int id = sqlite3_column_int(stmt,0);
+    const char *title = (const char*)sqlite3_column_text(stmt,1);
+    GtkWidget *btn = gtk_button_new_with_label(title);
+    gtk_box_append(bookbox,btn);
+  }
+
+  if(rc != SQLITE_DONE){
+    g_print("\nError while fetching data.",sqlite3_errmsg(db));
+  }
+
+  sqlite3_finalize(stmt);
+  sqlite3_close(db);
+
 }
 
 void saveBookData(){

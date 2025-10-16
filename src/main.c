@@ -3,6 +3,7 @@
 #include <../headers/popupmanager.h>
 #include <../headers/datacontroller.h>
 #include <../headers/displaybook.h>
+#include <../headers/deletebook.h>
 
 static GtkWidget *window = NULL;
 static GtkWidget *headerLabel;
@@ -30,6 +31,7 @@ static void activate(GtkApplication *app,gpointer user_data){
 	gtk_window_set_resizable(GTK_WINDOW(window), FALSE); 
 
   initPopupWindow(GTK_WINDOW(window),app);
+  initDeletePopup(GTK_WINDOW(window),app);
 	windowControls = gtk_window_controls_new(GTK_PACK_END);
 
 	//Widget
@@ -74,8 +76,7 @@ static void activate(GtkApplication *app,gpointer user_data){
 	gtk_center_box_set_start_widget(GTK_CENTER_BOX(subCenterBox),addButton);
 	gtk_center_box_set_center_widget(GTK_CENTER_BOX(subCenterBox),removeButton);
 	gtk_center_box_set_end_widget(GTK_CENTER_BOX(subCenterBox),editButton);
-
-	//gtk_grid_attach(GTK_GRID(subGrid),verticalPaned,0,0,3,1);
+  
 	gtk_grid_attach(GTK_GRID(mainGrid),scrollingWindow,0,3,1,1);
 	gtk_grid_attach(GTK_GRID(mainGrid),mainCenterBox,0,0,1,1);
 	gtk_grid_attach(GTK_GRID(mainGrid),searchBar,0,1,1,1);

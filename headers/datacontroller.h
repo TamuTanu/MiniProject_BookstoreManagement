@@ -20,6 +20,7 @@ struct books{
 extern struct recivedata data;
 
 void loadBook();
+void reloadBook(GtkBox *bookbox);
 void initAlertWindow();
 void onCancelClicked(GtkButton *button,gpointer user_data);
 void onDoneClicked(GtkButton *button,gpointer user_data);
