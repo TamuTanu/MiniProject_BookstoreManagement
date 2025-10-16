@@ -106,7 +106,35 @@ void reloadBook(GtkBox *bookbox){
 }
 
 void saveBookData(){
+sqlite3 *db;
+  sqlite3_stmt *stmt;
+  int rc;
+  rc = sqlite3_open("books.db",&db);
+  if (rc != SQLITE_OK) {
+    fprintf(stderr, "Can't open databese:%s\n", sqlite3_errmsg(db));
+  }else{
+    fprintf (stdout,"sucessfuly opendatabese!\n");
+  }
+const char *sql = "INSERT INTO books (title, author, price, cover_path) VALUES (?, ?, ?, ?);";
+rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+if (rc !=SQLITE_OK){
+  fprintf(stderr, "Cannot preparing SQL!:%s\n", sqlite3_errmsg(db));
+  sqlite3_close(db);
 
+sqlite3_bind_text(stmt, 1, name, -1, SQLITE_STATIC);
+sqlite3_bind_text(stmt, 2, author, -1, SQLITE_STATIC);
+sqlite3_bind_text(stmt, 3, price, -1, SQLITE_STATIC);
+sqlite3_bind_text(stmt, 4, coverpath, -1, SQLITE_STATIC);
+    }
+rc = sqlite3_step(stmt);
+if (rc != SQLITE_DONE) {
+  fprintf(stderr, "Cannot execute statement:%s\n", sqlite3_errmsg(db));
+}else{
+  fprintf(stdout, "Sucessfuly input databese!");
+  }
+
+sqlite3_finalize(stmt);
+sqlite3_close(db);
 }
 
 void onAlertShow(GtkButton *button,gpointer user_data){
@@ -142,7 +170,7 @@ void onDoneClicked(GtkButton *button,gpointer user_data){
   book.author = gtk_editable_get_text(GTK_EDITABLE(data.bookAuthor));
   book.price = gtk_editable_get_text(GTK_EDITABLE(data.bookPrice));
   book.coverpath = gtk_editable_get_text(GTK_EDITABLE(data.bookCoverPath));
-
+  saveBookData();
   gtk_widget_set_visible(alertWindow,TRUE);
   g_print("\nBook Name is %s.\nAuthor is %s.\nPrice is %s.\nPath: %s",
           book.name,book.author,book.price,book.coverpath);
