@@ -106,7 +106,7 @@ void reloadBook(GtkBox *bookbox){
 }
 
 void saveBookData(){
-
+  //RATTAMON WORKS
 }
 
 void onAlertShow(GtkButton *button,gpointer user_data){
@@ -115,6 +115,8 @@ void onAlertShow(GtkButton *button,gpointer user_data){
 }
 
 void initAlertWindow(){
+
+
   closeButton = gtk_button_new_with_label("CLOSE");
   gtk_widget_set_size_request(closeButton,250,60);
   g_signal_connect(closeButton,"clicked",G_CALLBACK(onAlertShow),NULL);
@@ -143,6 +145,7 @@ void onDoneClicked(GtkButton *button,gpointer user_data){
   book.price = gtk_editable_get_text(GTK_EDITABLE(data.bookPrice));
   book.coverpath = gtk_editable_get_text(GTK_EDITABLE(data.bookCoverPath));
 
+  saveBookData();
   gtk_widget_set_visible(alertWindow,TRUE);
   g_print("\nBook Name is %s.\nAuthor is %s.\nPrice is %s.\nPath: %s",
           book.name,book.author,book.price,book.coverpath);

@@ -15,6 +15,10 @@ void cancelClicked(GtkButton *button,gpointer user_data){
   gtk_widget_set_visible(deleteWindow,FALSE);
 }
 
+void onDeleteClicked(GtkButton *button,gpointer user_data){
+
+}
+
 void setDeleteWindow(){
   
   deleteScrolling = gtk_scrolled_window_new();
