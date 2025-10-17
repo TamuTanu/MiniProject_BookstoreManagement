@@ -4,6 +4,7 @@
 #include <../headers/datacontroller.h>
 #include <../headers/displaybook.h>
 #include <../headers/deletebook.h>
+#include <../headers/editBook.h>
 
 static GtkWidget *window = NULL;
 static GtkWidget *headerLabel;
@@ -32,6 +33,7 @@ static void activate(GtkApplication *app,gpointer user_data){
 
   initPopupWindow(GTK_WINDOW(window),app);
   initDeletePopup(GTK_WINDOW(window),app);
+  initSelectWindow(GTK_WINDOW(window),app);
 	windowControls = gtk_window_controls_new(GTK_PACK_END);
 
 	//Widget

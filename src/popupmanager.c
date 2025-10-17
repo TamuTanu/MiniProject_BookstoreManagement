@@ -73,7 +73,7 @@ void initPopupWidget(){
 	gtk_widget_set_hexpand(bookCoverPathbar,TRUE);
   gtk_widget_set_margin_top(bookCoverPathbar, 15);
   gtk_widget_set_margin_start(bookCoverPathbar,10);
-  cssAddLoadCSS(provider,"css/inputbar.css",bookAuthorbar,"inputbar");
+  cssAddLoadCSS(provider,"css/inputbar.css",bookCoverPathbar,"inputbar");
 
   data.bookName = GTK_ENTRY(bookNamebar);
   data.bookAuthor = GTK_ENTRY(bookAuthorbar);
@@ -118,8 +118,6 @@ void setWindow(){
 	gtk_grid_attach(GTK_GRID(grid),bookCoverPathbar,0,3,1,1);
 	gtk_grid_attach(GTK_GRID(grid),findPathButton,1,3,1,1);
 
-	//gtk_grid_attach(GTK_GRID(grid),doneButton,0,4,1,1);
-	//gtk_grid_attach(GTK_GRID(grid),cancerButton,1,4,1,1);
 
 	gtk_box_append(GTK_BOX(box), doneButton);
 	gtk_widget_set_margin_start(doneButton, 40);	
@@ -145,7 +143,6 @@ void showPopupWindow(){
   }else{
     g_print("PopupWindow is NULL.");
   }
-
 }
 
 void initPopupWindow(GtkWindow *mainWindow,GtkApplication *app){
@@ -160,7 +157,6 @@ void initPopupWindow(GtkWindow *mainWindow,GtkApplication *app){
       gtk_window_set_transient_for(GTK_WINDOW(popupwindow),mainWindow);
       gtk_window_set_modal(GTK_WINDOW(popupwindow),TRUE);
 
-      //g_signal_connect(popupwindow,"close-request",G_CALLBACK(onPopupClose),NULL); 
       g_object_ref_sink(popupwindow);
 
       initPopupWidget();

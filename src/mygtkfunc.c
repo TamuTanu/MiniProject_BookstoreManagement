@@ -1,6 +1,7 @@
 #include "../headers/mygtkfunc.h"
 #include "../headers/popupmanager.h"
 #include "../headers/deletebook.h"
+#include "../headers/editBook.h"
 
 //extern area
 GtkCssProvider *provider = NULL;
@@ -33,5 +34,5 @@ void showPopupRemoveWindow(GtkWidget *button,gpointer user_data){
 
 
 void showPopupEditWindow(GtkWidget *button,gpointer user_data){
-	g_print("3");
+	showPopupEdit();
 }

@@ -124,7 +124,7 @@ void setDeleteWindow(){
   itemBox = gtk_box_new(GTK_ORIENTATION_VERTICAL,5);
   buttonBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL,0);
 
-  cancelWindow = gtk_button_new_with_label("CANCEl");
+  cancelWindow = gtk_button_new_with_label("EXIT");
   gtk_widget_set_size_request(cancelWindow,160,90);
   g_signal_connect(cancelWindow,"clicked",G_CALLBACK(cancelClicked),NULL);
   
