@@ -119,7 +119,8 @@ void loadReloadBook(GtkBox *bookBox){
 }
 
 void editData(){
-    //Rattamon Works
+  //Rattamon Works
+  //Use ID variable for sql
 }
 
 void DoneClicked(GtkWidget *button,gpointer user_data){
