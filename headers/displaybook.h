@@ -4,6 +4,7 @@
 #include <gtk/gtk.h>
 
 extern GtkWidget *scrollingWindow;
+extern GtkWidget *displayBox;
 
 void initScrolling();
 

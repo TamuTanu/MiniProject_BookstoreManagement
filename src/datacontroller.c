@@ -1,5 +1,6 @@
 #include "../headers/datacontroller.h"
 #include "../headers/popupmanager.h"
+#include "../headers/displaybook.h"
 #include "../thirdparty/sqlite3.h"
 
 struct recivedata data;
@@ -66,12 +67,6 @@ void reloadBook(GtkBox *bookbox){
           gtk_box_remove(bookbox, child);
       }
     }
-    for (int i = 0; i < 50; i++) {
-        char label[8];
-        snprintf(label, sizeof(label), "NULL%d", i + 1);
-        GtkWidget *btn = gtk_button_new_with_label(label);
-        gtk_box_append(bookbox, btn);
-    }
   }else{
     g_print("\nDatabase sucessfuly reload.");
   }
@@ -105,7 +100,7 @@ void reloadBook(GtkBox *bookbox){
 
 }
 
-void saveBookData(){
+void saveBookData(struct books data){
 sqlite3 *db;
   sqlite3_stmt *stmt;
   int rc;
@@ -120,12 +115,13 @@ rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
 if (rc !=SQLITE_OK){
   fprintf(stderr, "Cannot preparing SQL!:%s\n", sqlite3_errmsg(db));
   sqlite3_close(db);
+  }
+  
+sqlite3_bind_text(stmt, 1, data.name, -1, SQLITE_STATIC);
+sqlite3_bind_text(stmt, 2, data.author, -1, SQLITE_STATIC);
+sqlite3_bind_text(stmt, 3, data.price, -1, SQLITE_STATIC);
+sqlite3_bind_text(stmt, 4, data.coverpath, -1, SQLITE_STATIC);
 
-sqlite3_bind_text(stmt, 1, name, -1, SQLITE_STATIC);
-sqlite3_bind_text(stmt, 2, author, -1, SQLITE_STATIC);
-sqlite3_bind_text(stmt, 3, price, -1, SQLITE_STATIC);
-sqlite3_bind_text(stmt, 4, coverpath, -1, SQLITE_STATIC);
-    }
 rc = sqlite3_step(stmt);
 if (rc != SQLITE_DONE) {
   fprintf(stderr, "Cannot execute statement:%s\n", sqlite3_errmsg(db));
@@ -135,6 +131,7 @@ if (rc != SQLITE_DONE) {
 
 sqlite3_finalize(stmt);
 sqlite3_close(db);
+  reloadBook(GTK_BOX(displayBox));
 }
 
 void onAlertShow(GtkButton *button,gpointer user_data){
@@ -170,7 +167,7 @@ void onDoneClicked(GtkButton *button,gpointer user_data){
   book.author = gtk_editable_get_text(GTK_EDITABLE(data.bookAuthor));
   book.price = gtk_editable_get_text(GTK_EDITABLE(data.bookPrice));
   book.coverpath = gtk_editable_get_text(GTK_EDITABLE(data.bookCoverPath));
-  saveBookData();
+  saveBookData(book);
   gtk_widget_set_visible(alertWindow,TRUE);
   g_print("\nBook Name is %s.\nAuthor is %s.\nPrice is %s.\nPath: %s",
           book.name,book.author,book.price,book.coverpath);

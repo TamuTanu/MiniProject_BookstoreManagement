@@ -13,6 +13,7 @@ void initCSS(){
 	GTK_STYLE_PROVIDER(provider),
 	GTK_STYLE_PROVIDER_PRIORITY_APPLICATION
 	);
+  g_object_ref_sink(provider);
 }
 
 void cssAddLoadCSS(GtkCssProvider *provider,char *path,GtkWidget *widget,char *class){

@@ -1,8 +1,13 @@
 #include <../headers/deletebook.h>
 #include <../headers/datacontroller.h>
 #include <../headers/mygtkfunc.h>
+#include <../thirdparty/sqlite3.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <glib.h>
 
 GtkWidget *deleteWindow = NULL;
+GtkWidget *confirmWindow = NULL;
 GtkWidget *deleteScrolling;
 GtkWidget *deleteTitle;
 GtkWidget *itemBox;
@@ -11,8 +16,72 @@ GtkWidget *buttonBox;
 GtkWidget *deleteButton;
 GtkWidget *cancelWindow;
 
+GtkWidget *confirmLabel;
+GtkWidget *confirmButton;
+GtkWidget *cancelPopup;
+GtkWidget *pGrid;
+
+static int pID;
+
+void bookButtonClicked(GtkWidget *button,gpointer user_data){
+  int id = GPOINTER_TO_INT(user_data);
+  pID = id;
+  gtk_widget_set_visible(confirmWindow,TRUE);
+  g_print("\nStill Listening from id: %d.",id);
+}
+
+void loadNReloadBook(GtkBox *bookBox){
+  
+  sqlite3 *db;
+  sqlite3_stmt *stmt;
+  int rc;
+
+  rc = sqlite3_open("books.db",&db);
+  if(rc != SQLITE_OK){
+    g_print("\nFailed to loadBook from database on deleteWindow.");
+  }else{
+    g_print("\nDatabase Successfuly load on deleteWindow");
+  }
+  
+  const char *sql = "SELECT id,title FROM books;";
+  rc = sqlite3_prepare_v2(db,sql,-1,&stmt,0);
+  if(rc != SQLITE_OK){
+    g_print("\nFailed to loadBook from database on deleteWindow.");
+    sqlite3_close(db);
+  }
+
+  if(bookBox != NULL){
+    GtkWidget *child;
+    while((child = gtk_widget_get_first_child(GTK_WIDGET(bookBox))) != NULL){
+      gtk_box_remove(bookBox,child);
+    }
+  }
+
+  while ((rc = sqlite3_step(stmt)) == SQLITE_ROW){
+    int id = sqlite3_column_int(stmt,0);
+    const char *titleOG = (const char*)sqlite3_column_text(stmt,1);
+    GtkWidget *btn = gtk_button_new_with_label(titleOG);
+    g_signal_connect(btn,"clicked",G_CALLBACK(bookButtonClicked),GINT_TO_POINTER(id));
+    gtk_box_append(bookBox,btn);
+  }
+
+}
+
+void onDeleteConfirm(GtkWidget *button,gpointer user_data){
+
+  int id = pID;
+  g_print("\nID: %d preparing for delete.",id);
+
+  //Rattamon Works
+
+  gtk_widget_set_visible(confirmWindow,FALSE);
+  loadNReloadBook(GTK_BOX(itemBox));
+
+}
+
 void cancelClicked(GtkButton *button,gpointer user_data){
   gtk_widget_set_visible(deleteWindow,FALSE);
+  gtk_widget_set_visible(confirmWindow,FALSE);
 }
 
 void setDeleteWindow(){
@@ -30,9 +99,6 @@ void setDeleteWindow(){
   itemBox = gtk_box_new(GTK_ORIENTATION_VERTICAL,5);
   buttonBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL,0);
 
-  deleteButton = gtk_button_new_with_label("DELETE");
-  gtk_widget_set_size_request(deleteWindow,160,90);
-
   cancelWindow = gtk_button_new_with_label("CANCEl");
   gtk_widget_set_size_request(cancelWindow,160,90);
   g_signal_connect(cancelWindow,"clicked",G_CALLBACK(cancelClicked),NULL);
@@ -40,12 +106,7 @@ void setDeleteWindow(){
 
   gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(deleteScrolling), itemBox);
   
-  gtk_box_append(GTK_BOX(buttonBox),deleteButton);
   gtk_box_append(GTK_BOX(buttonBox),cancelWindow);
-  /*
-  gtk_box_append(GTK_BOX(deleteBox),deleteTitle);
-  gtk_box_append(GTK_BOX(deleteBox),deleteScrolling);
-  gtk_box_append(GTK_BOX(deleteBox),buttonBox);*/
 
   gtk_grid_attach(GTK_GRID(deleteBox), deleteTitle, 0, 0, 1, 1);
   gtk_grid_attach(GTK_GRID(deleteBox), deleteScrolling, 0, 1, 1, 1);
@@ -57,11 +118,40 @@ void setDeleteWindow(){
 
 void showPopupDelete(){
   if(deleteWindow != NULL){
-    reloadBook(GTK_BOX(itemBox));
+    loadNReloadBook(GTK_BOX(itemBox));
     gtk_widget_set_visible(deleteWindow,TRUE);
   }else{
     g_print("DeleteWindow is NULL.");
   }
+}
+
+void initAlertPopup(){
+  
+  pGrid = gtk_grid_new();
+  confirmLabel = gtk_label_new("Comfirm delete?");
+  
+  confirmButton = gtk_button_new_with_label("confirm");
+  g_signal_connect(confirmButton,"clicked",G_CALLBACK(onDeleteConfirm),NULL);
+  cancelPopup = gtk_button_new_with_label("Cancel");
+  g_signal_connect(cancelPopup,"clicked",G_CALLBACK(cancelClicked),NULL);
+
+  gtk_grid_attach(GTK_GRID(pGrid),confirmLabel,0,0,2,1);
+  gtk_grid_attach(GTK_GRID(pGrid),confirmButton,1,1,1,1);
+  gtk_grid_attach(GTK_GRID(pGrid),cancelPopup,2,1,1,1);
+
+  confirmWindow = gtk_window_new();
+  gtk_widget_set_size_request(confirmWindow, 250, 150);
+  gtk_window_set_resizable(GTK_WINDOW(confirmWindow), FALSE);
+  gtk_window_set_decorated(GTK_WINDOW(confirmWindow), FALSE);
+  gtk_window_set_transient_for(GTK_WINDOW(confirmWindow), GTK_WINDOW(deleteWindow));
+  gtk_window_set_modal(GTK_WINDOW(confirmWindow), TRUE);
+
+  gtk_window_set_child(GTK_WINDOW(confirmWindow),pGrid);
+
+  gtk_widget_set_visible(confirmWindow, FALSE);
+
+  
+
 }
 
 void initDeletePopup(GtkWindow *window,GtkApplication *app){
@@ -77,6 +167,7 @@ void initDeletePopup(GtkWindow *window,GtkApplication *app){
     g_object_ref_sink(deleteWindow);
     gtk_widget_set_visible(deleteWindow,FALSE);
     setDeleteWindow();
+    initAlertPopup();
     g_print("\nDelete Popup Successfuly init.");
   }else{
     g_print("\nDelete Popup isn't NULL.");
