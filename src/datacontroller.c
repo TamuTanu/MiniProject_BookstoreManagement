@@ -85,14 +85,14 @@ void reloadBook(GtkBox *bookbox){
     }
   }
   while((rc = sqlite3_step(stmt)) == SQLITE_ROW){
-    int id = sqlite3_column_int(stmt,0);
+    //int id = sqlite3_column_int(stmt,0);
     const char *title = (const char*)sqlite3_column_text(stmt,1);
     GtkWidget *btn = gtk_button_new_with_label(title);
     gtk_box_append(bookbox,btn);
   }
 
   if(rc != SQLITE_DONE){
-    g_print("\nError while fetching data.",sqlite3_errmsg(db));
+    g_print("\nError while fetching data: %s.",sqlite3_errmsg(db));
   }
 
   sqlite3_finalize(stmt);
@@ -131,7 +131,7 @@ if (rc != SQLITE_DONE) {
 
 sqlite3_finalize(stmt);
 sqlite3_close(db);
-  reloadBook(GTK_BOX(displayBox));
+mainWindowReload(GTK_FLOW_BOX(displayFlowBox),NULL); 
 }
 
 void onAlertShow(GtkButton *button,gpointer user_data){

@@ -1,5 +1,6 @@
 #include <../headers/deletebook.h>
 #include <../headers/datacontroller.h>
+#include <../headers/displaybook.h>
 #include <../headers/mygtkfunc.h>
 #include <../thirdparty/sqlite3.h>
 #include <stdio.h>
@@ -101,7 +102,7 @@ void onDeleteConfirm(GtkWidget *button,gpointer user_data){
 
   gtk_widget_set_visible(confirmWindow,FALSE);
   loadNReloadBook(GTK_BOX(itemBox));
-
+  mainWindowReload(GTK_FLOW_BOX(displayFlowBox),NULL);
 }
 
 void cancelClicked(GtkButton *button,gpointer user_data){

@@ -11,26 +11,35 @@ static GtkWidget *headerLabel;
 static GtkWidget *mainGrid;
 static GtkWidget *mainCenterBox;
 static GtkWidget *subCenterBox;
-static GtkWidget *selectDropdown;
 
 static GtkWidget *addButton;
 static GtkWidget *removeButton;
 static GtkWidget *editButton;
-static GtkWidget *searchBar;
 
 static GtkWidget *windowControls;
+
+gboolean on_window_close_request(GtkWindow *window,gpointer user_data){
+  g_print("\nclose-request recived.");
+
+  GtkApplication *app = GTK_APPLICATION(user_data);
+  g_application_quit(G_APPLICATION(app));
+
+  return TRUE;
+}
 
 static void activate(GtkApplication *app,gpointer user_data){
 
 	initCSS();	
   loadBook();
-  initScrolling();
 	
 	window = gtk_application_window_new (app);
   	gtk_window_set_title (GTK_WINDOW (window), "BookstoreManagement");
   	gtk_widget_set_size_request (window,800,800);
 	gtk_window_set_resizable(GTK_WINDOW(window), FALSE); 
+  g_signal_connect(GTK_WINDOW(window),"close-request",G_CALLBACK(on_window_close_request),app);
 
+  Pwindow = returnWindow(GTK_WINDOW(window));
+  initScrolling();
   initPopupWindow(GTK_WINDOW(window),app);
   initDeletePopup(GTK_WINDOW(window),app);
   initSelectWindow(GTK_WINDOW(window),app);
@@ -50,10 +59,6 @@ static void activate(GtkApplication *app,gpointer user_data){
 	headerLabel = gtk_label_new("    BookstoreManagement");
 	cssAddLoadCSS(provider,"css/header.css",headerLabel,"header");
  
-	selectDropdown = gtk_drop_down_new(NULL,NULL);
-	
-	searchBar = gtk_search_entry_new();
-
 	//Button
 	addButton = gtk_button_new_with_label("Add");
 	gtk_widget_set_size_request(addButton, 266, 30);

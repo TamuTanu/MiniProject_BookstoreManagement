@@ -1,5 +1,6 @@
 #include <../headers/editBook.h>
 #include <../headers/mygtkfunc.h>
+#include <../headers/displaybook.h>
 #include <../thirdparty/sqlite3.h>
 //selectWindow
 GtkWidget *selectWindow = NULL;
@@ -167,6 +168,7 @@ void DoneClicked(GtkWidget *button,gpointer user_data){
 
   g_print("\nNew Data detect");
   editData();
+  mainWindowReload(GTK_FLOW_BOX(displayFlowBox),NULL);
   gtk_widget_set_visible(editWindow,FALSE);
 }
 
