@@ -72,7 +72,32 @@ void onDeleteConfirm(GtkWidget *button,gpointer user_data){
   int id = pID;
   g_print("\nID: %d preparing for delete.",id);
 
-  //Rattamon Works
+  sqlite3 *db;
+  sqlite3_stmt *stmt;
+  int rc;
+
+  rc = sqlite3_open("books.db", &db);
+  if (rc != SQLITE_OK) {
+    g_print("\n[ERROR] cannot open database: %s", sqlite3_errmsg(db));
+  }
+  const char *sql = "DELETE FROM books WHERE id = ?;";
+  rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+  if (rc != SQLITE_OK){
+    g_print("\n[ERROR] Failed to prepare delete statement: %s", sqlite3_errmsg(db));
+    sqlite3_close(db);
+  }
+
+    sqlite3_bind_int(stmt, 1, id);
+
+    rc = sqlite3_step(stmt);
+
+    if (rc != SQLITE_DONE){
+      g_print("\n[ERROR] Failed to execute delete statement : %s", sqlite3_errmsg(db));
+    }else{
+      g_print("\nBook with ID %d has been deleted Successfuly.",id);
+    }
+   sqlite3_finalize(stmt);
+    sqlite3_close(db);
 
   gtk_widget_set_visible(confirmWindow,FALSE);
   loadNReloadBook(GTK_BOX(itemBox));
