@@ -2,6 +2,8 @@
 #include <../headers/mygtkfunc.h>
 #include <../headers/displaybook.h>
 #include <../thirdparty/sqlite3.h>
+#include <glib/gstdio.h>
+
 //selectWindow
 GtkWidget *selectWindow = NULL;
 GtkWidget *selectScrolling = NULL;
@@ -35,6 +37,84 @@ BookData *Edata = NULL;
 BookData *Gdata = NULL;
 
 static int ID;
+
+void OnFileDialogOpenFinished(GObject *source_object, GAsyncResult *res, gpointer user_data){
+  
+  GtkFileDialog *dialog = GTK_FILE_DIALOG(source_object);
+  GtkEntry *path_entry = GTK_ENTRY(user_data);
+    
+  GError *error = NULL;
+  GFile *source_file = gtk_file_dialog_open_finish(dialog, res, &error);
+
+    if (error) {
+        g_warning("Error opening file: %s", error->message);
+        g_error_free(error);
+        return;
+    }
+    
+    if (source_file == NULL) {
+        g_print("User cancelled file selection.\n");
+        return;
+    }
+
+    char *basename = g_file_get_basename(source_file);
+
+    GFile *dest_dir = g_file_new_for_path("images");
+
+    GFile *dest_file = g_file_get_child(dest_dir, basename);
+
+    g_file_copy(source_file, 
+                dest_file, 
+                G_FILE_COPY_OVERWRITE, 
+                NULL,
+                NULL, 
+                NULL, 
+                &error);
+
+    if (error) {
+        g_warning("Error copying file: %s", error->message);
+        g_error_free(error);
+    } else {
+        char *new_path_string = g_file_get_path(dest_file);
+        
+        gtk_entry_buffer_set_text(gtk_entry_get_buffer(path_entry), new_path_string, -1);
+        
+        g_print("Successfully copied to: %s\n", new_path_string);
+        g_free(new_path_string);
+    }
+
+    g_free(basename);
+    g_object_unref(source_file);
+    g_object_unref(dest_dir);
+    g_object_unref(dest_file);  
+}
+
+void onFindPathClickeD(GtkButton *button,gpointer user_data){
+  
+  GtkFileDialog *dialog = gtk_file_dialog_new();
+    
+    GtkFileFilter *filter = gtk_file_filter_new();
+    gtk_file_filter_set_name(filter, "Image Files");
+    gtk_file_filter_add_mime_type(filter, "image/png");
+    gtk_file_filter_add_mime_type(filter, "image/jpeg");
+    gtk_file_filter_add_mime_type(filter, "image/jpg");
+    
+    GListStore *filters = g_list_store_new(GTK_TYPE_FILE_FILTER);
+    g_list_store_append(filters, filter);
+    
+    gtk_file_dialog_set_filters(dialog, G_LIST_MODEL(filters));
+    
+
+    GtkWidget *parent_window = gtk_widget_get_ancestor(GTK_WIDGET(button), GTK_TYPE_WINDOW);
+
+    gtk_file_dialog_open(dialog, 
+                         GTK_WINDOW(parent_window), 
+                         NULL, 
+                         OnFileDialogOpenFinished, 
+                         user_data); 
+
+    g_object_unref(dialog);
+}
 
 void onItemClicked(GtkWidget *button,gpointer user_data){
   
@@ -223,7 +303,7 @@ void initEditPopupWidget(){
 	gtk_widget_set_size_request(findpathbutton,30,30);
 	gtk_widget_set_hexpand(findpathbutton,TRUE);
   gtk_widget_set_margin_top(findpathbutton, 15);
-  //g_signal_connect(findPathButton,"clicked",G_CALLBACK(onButtonClicked),popupwindow);
+  g_signal_connect(findpathbutton,"clicked",G_CALLBACK(onFindPathClickeD),bookcoverbar);
   
   bookcoverimage = gtk_image_new_from_file("images/placeholder.png");
  	gtk_widget_set_size_request(bookcoverbar,230,310);

@@ -1,6 +1,7 @@
 #include "../headers/popupmanager.h"
 #include "../headers/mygtkfunc.h"
 #include "../headers/datacontroller.h"
+#include "glib/gstdio.h"
 
 //GtkWidget Declared zone
 GtkWidget *popupwindow = NULL;
@@ -12,30 +13,92 @@ GtkWidget *cancelButton;
 GtkWidget *bookCoverImage;
 GtkWidget *bookCoverPathbar;
 GtkWidget *findPathButton;
-GtkFileDialog *fileDialog;
 
 GtkWidget *paned;
 GtkWidget *grid;
 GtkWidget *box;
 
-void onFileDialogOpen(GtkFileDialog* self,GAsyncResult *res,gpointer user_data){
+void onFileDialogOpenFinished(GObject *source_object, GAsyncResult *res, gpointer user_data){
+  
+  GtkFileDialog *dialog = GTK_FILE_DIALOG(source_object);
+  GtkEntry *path_entry = GTK_ENTRY(user_data);
+    
+  GError *error = NULL;
+  GFile *source_file = gtk_file_dialog_open_finish(dialog, res, &error);
 
-  GFile *file = gtk_file_dialog_open_finish(self,res,NULL);
-  if(file){
-    char *path = g_file_get_path(file);
-    g_print("Cover path is %s\n",path);
-    g_free(file);
-    g_object_unref (file);
-  }
+    if (error) {
+        g_warning("Error opening file: %s", error->message);
+        g_error_free(error);
+        return;
+    }
+    
+    if (source_file == NULL) {
+        g_print("User cancelled file selection.\n");
+        return;
+    }
 
+    char *basename = g_file_get_basename(source_file);
+
+    GFile *dest_dir = g_file_new_for_path("images");
+
+    GFile *dest_file = g_file_get_child(dest_dir, basename);
+
+    g_file_copy(source_file, 
+                dest_file, 
+                G_FILE_COPY_OVERWRITE, 
+                NULL,
+                NULL, 
+                NULL, 
+                &error);
+
+    if (error) {
+        g_warning("Error copying file: %s", error->message);
+        g_error_free(error);
+    } else {
+        char *new_path_string = g_file_get_path(dest_file);
+        
+        gtk_entry_buffer_set_text(gtk_entry_get_buffer(path_entry), new_path_string, -1);
+        
+        g_print("Successfully copied to: %s\n", new_path_string);
+        g_free(new_path_string);
+    }
+
+    g_free(basename);
+    g_object_unref(source_file);
+    g_object_unref(dest_dir);
+    g_object_unref(dest_file);  
 }
 
-void onButtonClicked(GtkWidget *button,gpointer user_data){
+void onFindPathClicked(GtkButton *button,gpointer user_data){
+    
+  gtk_entry_set_placeholder_text(GTK_ENTRY(bookNamebar),"Input BookName.");
+  gtk_entry_set_placeholder_text(GTK_ENTRY(bookAuthorbar),"Input Author Name.");
+  gtk_entry_set_placeholder_text(GTK_ENTRY(bookPricebar),"Input BookPrice.");
+  gtk_entry_set_placeholder_text(GTK_ENTRY(bookCoverPathbar),"Input Cover Path.");
 
-  fileDialog = gtk_file_dialog_new();
+  GtkFileDialog *dialog = gtk_file_dialog_new();
+    
+    GtkFileFilter *filter = gtk_file_filter_new();
+    gtk_file_filter_set_name(filter, "Image Files");
+    gtk_file_filter_add_mime_type(filter, "image/png");
+    gtk_file_filter_add_mime_type(filter, "image/jpeg");
+    gtk_file_filter_add_mime_type(filter, "image/jpg");
+    
+    GListStore *filters = g_list_store_new(GTK_TYPE_FILE_FILTER);
+    g_list_store_append(filters, filter);
+    
+    gtk_file_dialog_set_filters(dialog, G_LIST_MODEL(filters));
+    
 
-  gtk_file_dialog_open(fileDialog,GTK_WINDOW(user_data),NULL,(GAsyncReadyCallback)onFileDialogOpen,NULL);
+    GtkWidget *parent_window = gtk_widget_get_ancestor(GTK_WIDGET(button), GTK_TYPE_WINDOW);
 
+    gtk_file_dialog_open(dialog, 
+                         GTK_WINDOW(parent_window), 
+                         NULL, 
+                         onFileDialogOpenFinished, 
+                         user_data); 
+
+    g_object_unref(dialog);
 }
 
 void initPopupWidget(){
@@ -98,7 +161,7 @@ void initPopupWidget(){
 	gtk_widget_set_size_request(findPathButton,30,30);
 	gtk_widget_set_hexpand(findPathButton,TRUE);
   gtk_widget_set_margin_top(findPathButton, 15);
-  g_signal_connect(findPathButton,"clicked",G_CALLBACK(onButtonClicked),popupwindow);
+  g_signal_connect(findPathButton,"clicked",G_CALLBACK(onFindPathClicked),bookCoverPathbar);
 
 	paned = gtk_paned_new(0);
 	gtk_paned_set_position(GTK_PANED(paned),270);
