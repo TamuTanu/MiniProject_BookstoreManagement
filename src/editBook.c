@@ -119,8 +119,38 @@ void loadReloadBook(GtkBox *bookBox){
 }
 
 void editData(){
-  //Rattamon Works
-  //Use ID variable for sql
+sqlite3 *db;
+sqlite3_stmt *stmt;
+int rc;
+
+rc = sqlite3_open("books.db", &db);
+if (rc != SQLITE_OK){
+fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+ return; 
+}
+
+const char *sql = "UPDATE books SET title = ?, author = ?, price = ?, cover_path = ? WHERE id = ?;";
+rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+
+if(rc != SQLITE_OK){
+ fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+} else {
+ sqlite3_bind_text(stmt, 1, Gdata->title, -1, SQLITE_STATIC);
+ sqlite3_bind_text(stmt, 2, Gdata->author, -1, SQLITE_STATIC);
+ sqlite3_bind_text(stmt, 3, Gdata->price, -1, SQLITE_STATIC);
+ sqlite3_bind_text(stmt, 4, Gdata->coverpath, -1, SQLITE_STATIC);
+ sqlite3_bind_int(stmt, 5, ID);
+
+ rc = sqlite3_step(stmt);
+ if (rc != SQLITE_DONE){
+ fprintf(stderr, "Execution failed: %s\n", sqlite3_errmsg(db));
+ } else {
+ g_print("\nBook with ID %d has been updated successfully.", ID);
+  }
+ }
+
+ sqlite3_finalize(stmt);
+ sqlite3_close(db);
 }
 
 void DoneClicked(GtkWidget *button,gpointer user_data){
