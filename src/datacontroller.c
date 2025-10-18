@@ -1,5 +1,6 @@
 #include "../headers/datacontroller.h"
 #include "../headers/popupmanager.h"
+#include "../headers/mygtkfunc.h"
 #include "../headers/displaybook.h"
 #include "../thirdparty/sqlite3.h"
 
@@ -142,16 +143,19 @@ void onAlertShow(GtkButton *button,gpointer user_data){
 void initAlertWindow(){
   closeButton = gtk_button_new_with_label("CLOSE");
   gtk_widget_set_size_request(closeButton,250,60);
+  cssAddLoadCSS(provider,"css/header.css",closeButton,"poplabel");
+	gtk_widget_set_hexpand(closeButton,FALSE);
   g_signal_connect(closeButton,"clicked",G_CALLBACK(onAlertShow),NULL);
 
   textLabel = gtk_label_new("Book sucessfuly added.");
+  cssAddLoadCSS(provider,"css/header.css",textLabel,"exitButton");
 
-  alPaned = gtk_box_new(GTK_ORIENTATION_VERTICAL,90);
+  alPaned = gtk_box_new(GTK_ORIENTATION_VERTICAL,15);
   gtk_box_append(GTK_BOX(alPaned),textLabel);
   gtk_box_append(GTK_BOX(alPaned),closeButton);
 
   alertWindow = gtk_window_new();
-  gtk_widget_set_size_request(alertWindow,250,150);
+  gtk_widget_set_size_request(alertWindow,250,100);
   gtk_window_set_resizable(GTK_WINDOW(alertWindow),FALSE);
   gtk_window_set_decorated(GTK_WINDOW(alertWindow),FALSE);
   gtk_window_set_transient_for(GTK_WINDOW(alertWindow),GTK_WINDOW(popupwindow));

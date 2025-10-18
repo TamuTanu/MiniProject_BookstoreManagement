@@ -294,7 +294,8 @@ void initEditPopupWidget(){
   bookcoverbar = gtk_entry_new();
   gtk_entry_set_placeholder_text(GTK_ENTRY(bookcoverbar),NULL);
 	gtk_widget_set_size_request(bookcoverbar,260,30);
-	gtk_widget_set_hexpand(bookcoverbar,TRUE);
+	gtk_widget_set_hexpand(bookcoverbar,FALSE);
+	gtk_widget_set_vexpand(bookcoverbar,FALSE);
   gtk_widget_set_margin_top(bookcoverbar, 15);
   gtk_widget_set_margin_start(bookcoverbar,10);
   cssAddLoadCSS(provider,"css/inputbar.css",bookcoverbar,"inputbar");
@@ -302,26 +303,31 @@ void initEditPopupWidget(){
   findpathbutton = gtk_button_new();
   gtk_button_set_icon_name(GTK_BUTTON(findpathbutton),"document-open");
 	gtk_widget_set_size_request(findpathbutton,30,30);
-	gtk_widget_set_hexpand(findpathbutton,TRUE);
+	gtk_widget_set_hexpand(findpathbutton,FALSE);
+	gtk_widget_set_vexpand(findpathbutton,FALSE);
   gtk_widget_set_margin_top(findpathbutton, 15);
   g_signal_connect(findpathbutton,"clicked",G_CALLBACK(onFindPathClickeD),bookcoverbar);
   
   bookcoverimage = gtk_image_new_from_file("images/placeholder.png");
- 	gtk_widget_set_size_request(bookcoverbar,230,310);
+ 	gtk_widget_set_size_request(bookcoverimage,230,310);
 
   donebutton = gtk_button_new_with_label("DONE");
 	gtk_widget_set_size_request(donebutton,120,60);
   gtk_widget_set_margin_top(donebutton, 15);
+  gtk_widget_set_margin_bottom(donebutton, 15);
+  cssAddLoadCSS(provider,"css/header.css",donebutton,"exitButton");
   g_signal_connect(donebutton,"clicked",G_CALLBACK(DoneClicked),NULL); 
 
 	cancelbutton = gtk_button_new_with_label("CANCEL");
 	gtk_widget_set_size_request(cancelbutton,120,60);
   gtk_widget_set_margin_top(cancelbutton, 15);
+  gtk_widget_set_margin_bottom(cancelbutton, 15);
+  cssAddLoadCSS(provider,"css/header.css",cancelbutton,"exitButton");
   g_signal_connect(cancelbutton,"clicked",G_CALLBACK(CancelClicked),NULL); 
   
   editPaned = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL);
   gtk_paned_set_position(GTK_PANED(editPaned),270);
-  cssAddLoadCSS(provider,"css/inputbar.css",editPaned,"panedframe");
+  cssAddLoadCSS(provider,"css/header.css",editPaned,"paned");
 	editGrid = gtk_grid_new();
 	editBox = gtk_box_new(0,10);
 

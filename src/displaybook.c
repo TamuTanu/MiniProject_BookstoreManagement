@@ -79,13 +79,22 @@ void onExitDetail(GtkWidget *button,gpointer user_data){
 void initDetailWindow(){
 
   img = gtk_image_new_from_file("images/placeholder.png");
-  gtk_widget_set_size_request(img,230,310);
+  gtk_widget_set_size_request(img,500,600);
+ // cssAddLoadCSS(provider,"css/header.css",img,"paned");
 
   titleLabel = gtk_label_new("Title");
+  cssAddLoadCSS(provider,"css/header.css",titleLabel,"datailabels");
+  gtk_widget_set_margin_top(titleLabel,15 );
   authorLabel = gtk_label_new("Author");
+  cssAddLoadCSS(provider,"css/header.css",authorLabel,"datailabels");
+  gtk_widget_set_margin_top(authorLabel,15 );
   priceLabel = gtk_label_new("priceLabel");
+  cssAddLoadCSS(provider,"css/header.css",priceLabel,"datailabels");
+  gtk_widget_set_margin_top(priceLabel,15 );
   showBookBox = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
+  cssAddLoadCSS(provider,"css/header.css",showBookBox,"paned");
   exitbtn = gtk_button_new_with_label("CLOSE");
+  cssAddLoadCSS(provider,"css/header.css",exitbtn,"optionsButton");
   g_signal_connect(exitbtn,"clicked",G_CALLBACK(onExitDetail),NULL);
 
   gtk_box_append(GTK_BOX(showBookBox),img);
