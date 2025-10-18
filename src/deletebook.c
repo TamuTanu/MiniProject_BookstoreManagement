@@ -62,6 +62,7 @@ void loadNReloadBook(GtkBox *bookBox){
     int id = sqlite3_column_int(stmt,0);
     const char *titleOG = (const char*)sqlite3_column_text(stmt,1);
     GtkWidget *btn = gtk_button_new_with_label(titleOG);
+    cssAddLoadCSS(provider,"css/header.css",btn,"DeleteList");
     g_signal_connect(btn,"clicked",G_CALLBACK(bookButtonClicked),GINT_TO_POINTER(id));
     gtk_box_append(bookBox,btn);
   }
@@ -113,20 +114,25 @@ void cancelClicked(GtkButton *button,gpointer user_data){
 void setDeleteWindow(){
   
   deleteScrolling = gtk_scrolled_window_new();
-  cssAddLoadCSS(provider,"css/deletebox.css",deleteScrolling,"scrolledwindow");
+  cssAddLoadCSS(provider,"css/header.css",deleteScrolling,"paned");
   gtk_widget_set_size_request(deleteScrolling,430,350);
   gtk_widget_set_hexpand(deleteScrolling, TRUE);
   gtk_widget_set_vexpand(deleteScrolling, TRUE);
 
   deleteTitle = gtk_label_new("Select Item");
+    cssAddLoadCSS(provider,"css/header.css",deleteTitle,"deleteTitle");
   gtk_widget_set_size_request(deleteTitle,470,60);
   //deleteBox = gtk_box_new(GTK_ORIENTATION_VERTICAL,5);
   deleteBox = gtk_grid_new();
   itemBox = gtk_box_new(GTK_ORIENTATION_VERTICAL,5);
+    cssAddLoadCSS(provider,"css/header.css",itemBox,"itemBox");
   buttonBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL,0);
 
   cancelWindow = gtk_button_new_with_label("EXIT");
   gtk_widget_set_size_request(cancelWindow,160,90);
+  gtk_widget_set_hexpand(cancelWindow,TRUE);
+  gtk_widget_set_vexpand(cancelWindow,TRUE);
+    cssAddLoadCSS(provider,"css/header.css",cancelWindow,"exitButton");
   g_signal_connect(cancelWindow,"clicked",G_CALLBACK(cancelClicked),NULL);
   
 
@@ -155,13 +161,25 @@ void initAlertPopup(){
   
   pGrid = gtk_grid_new();
   confirmLabel = gtk_label_new("Comfirm delete?");
+  cssAddLoadCSS(provider,"css/header.css",confirmLabel,"datailabel");
+  gtk_widget_set_hexpand(confirmLabel, TRUE);
+  gtk_widget_set_vexpand(confirmLabel, TRUE);
+
   
   confirmButton = gtk_button_new_with_label("confirm");
+  cssAddLoadCSS(provider,"css/header.css",confirmButton,"exitButton");
+  gtk_widget_set_size_request(confirmButton, 125,50);
+  gtk_widget_set_hexpand(confirmButton, TRUE);
+  gtk_widget_set_vexpand(confirmButton, TRUE);
   g_signal_connect(confirmButton,"clicked",G_CALLBACK(onDeleteConfirm),NULL);
   cancelPopup = gtk_button_new_with_label("Cancel");
+  cssAddLoadCSS(provider,"css/header.css",cancelPopup,"exitButton");
+  gtk_widget_set_size_request(cancelPopup, 125,50);
+  gtk_widget_set_hexpand(cancelPopup, TRUE);
+  gtk_widget_set_vexpand(cancelPopup, TRUE);
   g_signal_connect(cancelPopup,"clicked",G_CALLBACK(cancelClicked),NULL);
 
-  gtk_grid_attach(GTK_GRID(pGrid),confirmLabel,0,0,2,1);
+  gtk_grid_attach(GTK_GRID(pGrid),confirmLabel,0,0,3,1);
   gtk_grid_attach(GTK_GRID(pGrid),confirmButton,1,1,1,1);
   gtk_grid_attach(GTK_GRID(pGrid),cancelPopup,2,1,1,1);
 

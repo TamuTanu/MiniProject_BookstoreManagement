@@ -192,6 +192,7 @@ void loadReloadBook(GtkBox *bookBox){
     int id = sqlite3_column_int(stmt,0);
     const char *titleOG = (const char*)sqlite3_column_text(stmt,1);
     GtkWidget *btn = gtk_button_new_with_label(titleOG);
+        cssAddLoadCSS(provider,"css/header.css",btn,"datailabel");
     g_signal_connect(btn,"clicked",G_CALLBACK(onItemClicked),GINT_TO_POINTER(id));
     gtk_box_append(bookBox,btn);
     g_print("\nsuccessfuly create item");
@@ -382,12 +383,15 @@ void initSelectWidget(){
 
   editTitle = gtk_label_new("Select Item for Edit.");
   gtk_widget_set_size_request(editTitle,470,60);
+  cssAddLoadCSS(provider,"css/header.css",editTitle,"deleteTitle");
   
   selectBox = gtk_box_new(GTK_ORIENTATION_VERTICAL,5);
+  cssAddLoadCSS(provider,"css/header.css",selectBox,"itemBox");
   selectItembox = gtk_box_new(GTK_ORIENTATION_VERTICAL,5);
 
   exitButton = gtk_button_new_with_label("EXIT");
   gtk_widget_set_size_request(exitButton,470,90);
+  cssAddLoadCSS(provider,"css/header.css",exitButton,"exitButton");
   g_signal_connect(exitButton,"clicked",G_CALLBACK(onExitClicked),NULL);
   
   gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(selectScrolling),selectItembox);

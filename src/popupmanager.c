@@ -146,15 +146,20 @@ void initPopupWidget(){
 	doneButton = gtk_button_new_with_label("DONE");
 	gtk_widget_set_size_request(doneButton,120,60);
   gtk_widget_set_margin_top(doneButton, 15);
+  cssAddLoadCSS(provider,"css/header.css",doneButton,"AddButton");
   g_signal_connect(doneButton,"clicked",G_CALLBACK(onDoneClicked),NULL); 
 
 	cancelButton = gtk_button_new_with_label("CANCEL");
 	gtk_widget_set_size_request(cancelButton,120,60);
   gtk_widget_set_margin_top(cancelButton, 15);
+  cssAddLoadCSS(provider,"css/header.css",cancelButton,"AddButton");
   g_signal_connect(cancelButton,"clicked",G_CALLBACK(onCancelClicked),NULL); 
 
 	bookCoverImage = gtk_image_new_from_file("images/placeholder.png");
  	gtk_widget_set_size_request(bookCoverImage,230,310);
+  cssAddLoadCSS(provider,"css/header.css",bookCoverImage,"fixed-image");
+  gtk_widget_set_hexpand(bookCoverImage, FALSE);
+  gtk_widget_set_vexpand(bookCoverImage, FALSE);
 
 	findPathButton = gtk_button_new();
   gtk_button_set_icon_name(GTK_BUTTON(findPathButton),"document-open");
@@ -165,7 +170,8 @@ void initPopupWidget(){
 
 	paned = gtk_paned_new(0);
 	gtk_paned_set_position(GTK_PANED(paned),270);
-  cssAddLoadCSS(provider,"css/inputbar.css",paned,"panedframe");
+  cssAddLoadCSS(provider,"css/header.css",paned,"paned");
+  cssAddLoadCSS(provider,"css/header.css",paned,"paned-start-side");
 	grid = gtk_grid_new();
 	box = gtk_box_new(0,10);
 

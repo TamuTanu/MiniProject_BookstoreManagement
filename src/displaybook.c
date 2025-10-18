@@ -1,6 +1,7 @@
 #include <../headers/displaybook.h>
 #include <../headers/datacontroller.h>
 #include <../thirdparty/sqlite3.h>
+#include <../headers/mygtkfunc.h>
 
 GtkWidget *scrollingWindow;
 GtkWidget *displayFlowBox;
@@ -164,14 +165,23 @@ void mainWindowReload(GtkFlowBox *flowbox, const char *searchterm) {
         }
 
         gtk_widget_set_size_request(img, 230, 310);
+        cssAddLoadCSS(provider,"css/header.css",img,"fixed-image");
+        gtk_widget_set_hexpand(img, FALSE);
+        gtk_widget_set_vexpand(img, FALSE);
         GtkWidget *bookLabel = gtk_label_new(title);
-        GtkWidget *bookBoxs = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+        GtkWidget *bookBoxs = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);        
+        cssAddLoadCSS(provider,"css/header.css",bookBoxs,"fixed-box");
+        gtk_widget_set_hexpand(bookBoxs, FALSE);
+        gtk_widget_set_vexpand(bookBoxs, FALSE);
         gtk_box_append(GTK_BOX(bookBoxs), img);
         gtk_box_append(GTK_BOX(bookBoxs), bookLabel);
-        gtk_widget_set_size_request(bookBoxs,270,500);
+        gtk_widget_set_size_request(bookBoxs,270,350);
         GtkWidget *btn = gtk_button_new();
+        cssAddLoadCSS(provider,"css/header.css",btn,"datailabel");
+        gtk_widget_set_vexpand(btn, FALSE);
+        gtk_widget_set_valign(btn, GTK_ALIGN_START);
         gtk_button_set_child(GTK_BUTTON(btn), bookBoxs);
-        gtk_widget_set_size_request(btn,270,500);
+        gtk_widget_set_size_request(btn,270,350);
         g_signal_connect(btn, "clicked", G_CALLBACK(showDetailBook), GINT_TO_POINTER(id));
 
         gtk_flow_box_append(flowbox, btn);

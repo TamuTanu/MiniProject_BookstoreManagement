@@ -33,3 +33,67 @@
 	border: 1.25px solid #000000;
 }
 
+.datailabel{
+  font-size: 20px;
+  font-weight: bold;
+  color: #000000;
+  background: #ffdfb9;
+}
+.deleteTitle{
+  font-size: 20px;
+  font-weight: bold;
+  color: #ced46a;
+  background: #07553b;
+}
+
+.fixed-image{
+    min-width: 230px;
+
+    min-height: 310px;
+}
+.fixed-box{
+    min-width: 230px;
+
+    min-height: 350px;
+}
+
+.paned-start-side {
+    background-color: #ced46a; /* สีเทาเข้ม */
+}
+
+.paned-end-side {
+    background-color: #07553b; /* สีเทาอ่อน */
+}
+paned {
+    border: 2px solid black;
+}
+.AddButton{	
+	font-size: 20px;
+	font-weight: bold;
+	color: #ced46a;
+	background: #07553b;
+	border: 1px solid #000000;
+	margin-top: 10px;
+  	margin-bottom: 10px;
+}
+.exitButton{	
+	font-size: 20px;
+	font-weight: bold;
+	color: #ced46a;
+	background: #07553b;
+	border: 1px solid #000000;
+}
+
+.DeleteList{	
+	font-size: 20px;
+	font-weight: bold;
+	color: #000000;
+	background: #ffdfb9;
+	border: 1px solid #000000;
+	margin-top: 2px;
+  	margin-bottom: 2px;
+}
+
+.itemBox{
+  background:#ced46a;
+}
